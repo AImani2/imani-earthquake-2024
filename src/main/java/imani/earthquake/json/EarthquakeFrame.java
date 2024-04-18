@@ -10,23 +10,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-
+import java.util.function.Function;
 
 public class EarthquakeFrame extends JFrame {
-    JList<Feature> earthquakes = new JList<>();
+    JList<String> earthquakes = new JList<>();
 
     public EarthquakeFrame() {
 
-        setSize(1000, 600);
+        setSize(300, 600);
         setTitle("Earthquake Frame");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JPanel main = new JPanel();
-        main.setLayout(new BorderLayout());
+        //JPanel main = new JPanel();
+        setLayout(new BorderLayout());
 
         add(earthquakes, BorderLayout.CENTER);
         //tells the JFrame to use this JPanel
-        setContentPane(main);
+        //setContentPane(main);
 
         EarthquakeService service = new EarthquakeServiceFactory().getService();
 
@@ -44,6 +44,12 @@ public class EarthquakeFrame extends JFrame {
 
     private void handleResponse(FeatureCollection response) {
         // got up to here in my code
+        String[] listData = new String[response.features.length];
+        for (int i = 0; i < response.features.length; i++) {
+            Feature feature = response.features[i];
+            listData[i] = feature.properties.mag + " " + feature.properties.place;
+        }
+        earthquakes.setListData(listData);
 //        String[] listData = Arrays.stream(response.features).map(feature -> )
 //        for (int currentEarthquake = 0; currentEarthquake < response.features.length; currentEarthquake++) {
 //
@@ -51,5 +57,10 @@ public class EarthquakeFrame extends JFrame {
         // is this taking my featurecollection and returning it to a
         // GUI?
     }
+
+    public static void main(String[] args) {
+        new EarthquakeFrame().setVisible(true);
+    }
 }
+
 
