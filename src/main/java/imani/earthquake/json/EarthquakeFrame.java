@@ -52,3 +52,4 @@ public class EarthquakeFrame extends JFrame {
         // GUI?
     }
 }
+

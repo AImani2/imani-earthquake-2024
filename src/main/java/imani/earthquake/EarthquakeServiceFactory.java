@@ -24,3 +24,7 @@ public class EarthquakeServiceFactory {
         return retrofit.create(EarthquakeService.class);
     }
 }
+
+
+
+
