@@ -17,6 +17,8 @@ import java.util.function.Function;
 public class EarthquakeFrame extends JFrame {
     JList<String> earthquakes = new JList<>();
 
+    EarthquakeService service = new EarthquakeServiceFactory().getService();
+
     JRadioButton oneHourButton = new JRadioButton("Past Hour");
     JRadioButton thirtyDaysButton = new JRadioButton("Past Thirty Days");
     ButtonGroup buttonGroup = new ButtonGroup();
@@ -69,7 +71,7 @@ public class EarthquakeFrame extends JFrame {
         //tells the JFrame to use this JPanel
         //setContentPane(main);
 
-        EarthquakeService service = new EarthquakeServiceFactory().getService();
+
 
         // jList that outputs the data from Earthquake service
         // This will make a request for the ProductResponse on a separate Thread.
@@ -77,29 +79,28 @@ public class EarthquakeFrame extends JFrame {
 // Do I need this here to repeat?
 
 
+    }
 
+    private void fetchAndDisplayOneHourData() {
+        Disposable disposable = service.oneHour() // updates automatically according to the website
+                // tells Rx to request the data on a background Thread
+                .subscribeOn(Schedulers.io())
+                // tells Rx to handle the response on Swing's main Thread
+                .observeOn(SwingSchedulers.edt())
+                //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                .subscribe(response -> handleResponse(response),
+                        Throwable::printStackTrace);
+    }
 
-        private void fetchAndDisplayOneHourData() {
-            Disposable disposable = service.oneHour() // updates automatically according to the website
-                    // tells Rx to request the data on a background Thread
-                    .subscribeOn(Schedulers.io())
-                    // tells Rx to handle the response on Swing's main Thread
-                    .observeOn(SwingSchedulers.edt())
-                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
-                    .subscribe(response -> handleResponse(response),
-                            Throwable::printStackTrace);
-        }
-
-        private void fetchAndDisplayThirtyDaysData() {
-            Disposable disposable2 = service.thirtyDays() // updates automatically according to the website
-                    // tells Rx to request the data on a background Thread
-                    .subscribeOn(Schedulers.io())
-                    // tells Rx to handle the response on Swing's main Thread
-                    .observeOn(SwingSchedulers.edt())
-                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
-                    .subscribe(response -> handleResponse(response),
-                            Throwable::printStackTrace);
-        }
+    private void fetchAndDisplayThirtyDaysData() {
+        Disposable disposable2 = service.thirtyDays() // updates automatically according to the website
+                // tells Rx to request the data on a background Thread
+                .subscribeOn(Schedulers.io())
+                // tells Rx to handle the response on Swing's main Thread
+                .observeOn(SwingSchedulers.edt())
+                //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                .subscribe(response -> handleResponse(response),
+                        Throwable::printStackTrace);
     }
 
     private void handleResponse(FeatureCollection response) {
