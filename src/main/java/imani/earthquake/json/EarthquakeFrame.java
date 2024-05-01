@@ -77,6 +77,31 @@ public class EarthquakeFrame extends JFrame {
 // Do I need this here to repeat?
 
 
+
+
+        private void fetchAndDisplayOneHourData() {
+            Disposable disposable = service.oneHour() // updates automatically according to the website
+                    // tells Rx to request the data on a background Thread
+                    .subscribeOn(Schedulers.io())
+                    // tells Rx to handle the response on Swing's main Thread
+                    .observeOn(SwingSchedulers.edt())
+                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                    .subscribe(response -> handleResponse(response),
+                            Throwable::printStackTrace);
+        }
+
+        private void fetchAndDisplayThirtyDaysData() {
+            Disposable disposable2 = service.thirtyDays() // updates automatically according to the website
+                    // tells Rx to request the data on a background Thread
+                    .subscribeOn(Schedulers.io())
+                    // tells Rx to handle the response on Swing's main Thread
+                    .observeOn(SwingSchedulers.edt())
+                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                    .subscribe(response -> handleResponse(response),
+                            Throwable::printStackTrace);
+        }
+    }
+
     private void handleResponse(FeatureCollection response) {
         // got up to here in my code
         String[] listData = new String[response.features.length];
@@ -93,32 +118,10 @@ public class EarthquakeFrame extends JFrame {
         // GUI?
     }
 
-    private void fetchAndDisplayOneHourData() {
-            Disposable disposable = service.oneHour() // updates automatically according to the website
-                    // tells Rx to request the data on a background Thread
-                    .subscribeOn(Schedulers.io())
-                    // tells Rx to handle the response on Swing's main Thread
-                    .observeOn(SwingSchedulers.edt())
-                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
-                    .subscribe(response -> handleResponse(response),
-                            Throwable::printStackTrace);
-    }
-
-    private void fetchAndDisplayThirtyDaysData() {
-            Disposable disposable2 = service.thirtyDays() // updates automatically according to the website
-                    // tells Rx to request the data on a background Thread
-                    .subscribeOn(Schedulers.io())
-                    // tells Rx to handle the response on Swing's main Thread
-                    .observeOn(SwingSchedulers.edt())
-                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
-                    .subscribe(response -> handleResponse(response),
-                            Throwable::printStackTrace);
-        }
-    }
-
     public static void main(String[] args) {
         new EarthquakeFrame().setVisible(true);
     }
 }
+
 
 
