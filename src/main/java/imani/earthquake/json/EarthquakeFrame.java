@@ -61,24 +61,6 @@ public class EarthquakeFrame extends JFrame {
                 fetchAndDisplayThirtyDaysData();
             }
         });
-
-        // Code for existing functionality (fetching earthquake data and updating JList)
-        // Add it here...
-
-
-
-        //add(earthquakes, BorderLayout.CENTER);
-        //tells the JFrame to use this JPanel
-        //setContentPane(main);
-
-
-
-        // jList that outputs the data from Earthquake service
-        // This will make a request for the ProductResponse on a separate Thread.
-
-// Do I need this here to repeat?
-
-
     }
 
     private void fetchAndDisplayOneHourData() {
@@ -111,12 +93,6 @@ public class EarthquakeFrame extends JFrame {
             listData[i] = feature.properties.mag + " " + feature.properties.place;
         }
         earthquakes.setListData(listData);
-//        String[] listData = Arrays.stream(response.features).map(feature -> )
-//        for (int currentEarthquake = 0; currentEarthquake < response.features.length; currentEarthquake++) {
-//
-//        }
-        // is this taking my featurecollection and returning it to a
-        // GUI?
     }
 
     public static void main(String[] args) {
